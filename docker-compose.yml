@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  factorio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VERSION: 2.0.13
+    volumes:
+      - /home/factorio/saves:/opt/factorio/saves
+      - /home/factorio/backups/server-settings.json:/opt/factorio/data/server-settings.json
+    ports:
+      - "34197:34197/udp"
