@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        VERSION: 2.0.14
+        VERSION: 2.0.15
     volumes:
       - /home/factorio/saves:/opt/factorio/saves
       - /home/factorio/backups/server-settings.json:/opt/factorio/data/server-settings.json
