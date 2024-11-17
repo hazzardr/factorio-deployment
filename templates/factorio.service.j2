@@ -1,0 +1,11 @@
+[Unit]
+Description={{ description }}
+
+[Service]
+ExecStart={{ exec_start }}
+Type=simple
+User={{ user }}
+Group={{ user }}
+
+[Install]
+WantedBy=multi-user.target

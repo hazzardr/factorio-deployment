@@ -18,8 +18,8 @@
         name: factorio
         group: factorio
         system: yes
-        create_home: no
-        shell: /usr/sbin/nologin
+        create_home: yes
+        shell: /bin/bash
         state: present
 
     - name: Create systemd service template
@@ -43,6 +43,7 @@
         name: factorio
         state: started
         enabled: yes
+      become: true
 
     - name: Install required packages
       apt:
