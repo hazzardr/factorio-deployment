@@ -1,1 +1,4 @@
-.idea/
+.idea/# Add to .gitignore
+inventory.yml
+inventory/*.yml
+!inventory/example.yml

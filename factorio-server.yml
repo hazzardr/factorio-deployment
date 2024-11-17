@@ -1,0 +1,68 @@
+---
+# factorio-server.yml
+- name: Install Factorio Server
+  hosts: factorio_server
+  become: true
+  vars:
+    factorio_version: "latest"
+    install_dir: "/opt/factorio"
+    
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - wget
+          - xz-utils
+        state: present
+        update_cache: yes
+
+    - name: Create install directory
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download Factorio server
+      get_url:
+        url: "https://factorio.com/get-download/stable/headless/linux64"
+        dest: "/tmp/factorio.tar.xz"
+        mode: '0644'
+            
+    - name: Check if saves directory exists
+      stat:
+        path: "{{ install_dir }}/saves"
+      register: saves_check
+
+    - name: Temporarily move saves directory
+      command: mv "{{ install_dir }}/saves" "/tmp/factorio_saves_backup"
+      when: saves_check.stat.exists and saves_check.stat.isdir
+
+    - name: Extract Factorio archive
+      unarchive:
+        src: "/tmp/factorio.tar.xz"
+        dest: "{{ install_dir }}"
+        remote_src: yes
+
+    - name: Restore saves directory
+      command: mv "/tmp/factorio_saves_backup" "{{ install_dir }}/saves"
+      when: saves_check.stat.exists and saves_check.stat.isdir
+
+    - name: Ensure saves directory exists
+      file:
+        path: "{{ install_dir }}/saves"
+        state: directory
+        mode: '0755'
+
+    - name: Clean up download
+      file:
+        path: "/tmp/factorio.tar.xz"
+        state: absent
+
+    - name: Set permissions
+      file:
+        path: "{{ install_dir }}"
+        state: directory
+        recurse: yes
+        owner: factorio
+        group: factorio
+        mode: '0755'
